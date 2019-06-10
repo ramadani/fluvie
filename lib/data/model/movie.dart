@@ -17,4 +17,8 @@ class Movie extends Equatable {
   DateTime getReleaseDate() {
     return DateTime.parse(releaseDate);
   }
+
+  String posterUrl() {
+    return "https://image.tmdb.org/t/p/w200$posterPath";
+  }
 }
