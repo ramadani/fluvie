@@ -13,3 +13,8 @@ class Fetch extends MovieListEvent {
   @override
   String toString() => 'Fetch ${type.toString()}';
 }
+
+class ChangeTab extends MovieListEvent {
+  @override
+  String toString() => 'ChangeTab';
+}

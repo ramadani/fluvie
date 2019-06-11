@@ -54,7 +54,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
             return ListView.builder(
               itemBuilder: (context, index) {
                 if (index >= state.movies.length) {
-                  return Text("loading");
+                  return _BottomLoader();
                 }
 
                 return _MovieItem(
@@ -104,6 +104,24 @@ class _MovieItem extends StatelessWidget {
           right: horizontal,
         ),
         child: MovieCard(movie: movie),
+      ),
+    );
+  }
+}
+
+class _BottomLoader extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      child: Center(
+        child: SizedBox(
+          width: 24,
+          height: 24,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+          ),
+        ),
       ),
     );
   }

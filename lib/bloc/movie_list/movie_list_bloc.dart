@@ -12,7 +12,11 @@ class MovieListBloc extends Bloc<MovieListEvent, MovieListState> {
 
   @override
   Stream<MovieListState> mapEventToState(MovieListEvent event) async* {
-    if (event is Fetch) {
+    if (event is ChangeTab) {
+      yield MovieListUninitialized();
+    }
+
+    if (event is Fetch && !_hasReachedMax(currentState)) {
       final state = currentState;
       try {
         if (state is MovieListUninitialized) {
@@ -47,4 +51,7 @@ class MovieListBloc extends Bloc<MovieListEvent, MovieListState> {
       }
     }
   }
+
+  bool _hasReachedMax(MovieListState state) =>
+      state is MovieListLoaded && state.hasReachedMax;
 }

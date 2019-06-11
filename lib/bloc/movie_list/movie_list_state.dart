@@ -7,10 +7,6 @@ abstract class MovieListState extends Equatable {
 }
 
 class MovieListUninitialized extends MovieListState {
-  final MovieListEnum type;
-
-  MovieListUninitialized({this.type}) : super([type]);
-
   @override
   String toString() => 'MovieListUninitialized';
 }
