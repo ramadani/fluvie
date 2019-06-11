@@ -8,8 +8,8 @@ class JsonConfig extends Config {
   ConfigData _data;
 
   @override
-  Future<void> loadFromEnv(String path) async {
-    final content = await rootBundle.loadString("assets/env/$path");
+  Future<void> loadFromEnv(String filename) async {
+    final content = await rootBundle.loadString("assets/env/$filename");
     final data = jsonDecode(content);
 
     _data = ConfigData(
