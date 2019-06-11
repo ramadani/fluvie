@@ -28,7 +28,7 @@ class MovieCard extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     Expanded(
-                      flex: 4,
+                      flex: 1,
                       child: Padding(
                         padding: EdgeInsets.only(right: 8.0),
                         child: Text(

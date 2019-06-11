@@ -20,7 +20,7 @@ class PosterCard extends StatelessWidget {
           new BoxShadow(
             color: Colors.black26,
             blurRadius: 8.0,
-            offset: new Offset(0.0, 4.0),
+            offset: new Offset(0.0, 6.0),
           ),
         ],
       ),
