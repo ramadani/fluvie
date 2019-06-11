@@ -12,10 +12,6 @@ class MovieListBloc extends Bloc<MovieListEvent, MovieListState> {
 
   @override
   Stream<MovieListState> mapEventToState(MovieListEvent event) async* {
-    if (event is ChangeTab) {
-      yield MovieListUninitialized();
-    }
-
     if (event is Fetch && !_hasReachedMax(currentState)) {
       final state = currentState;
       try {
@@ -46,7 +42,8 @@ class MovieListBloc extends Bloc<MovieListEvent, MovieListState> {
             );
           }
         }
-      } catch (_) {
+      } catch (e) {
+        print('error gan: ${e.toString()}');
         yield MovieListError();
       }
     }

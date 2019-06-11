@@ -7,69 +7,129 @@ import 'package:fluvie/data/repository/movie_list_enum.dart';
 
 import 'movie_card.dart';
 
-class MovieListScreen extends StatefulWidget {
-  final MovieListBloc _bloc;
+class MovieListScreen extends StatelessWidget {
+  final MovieListBloc nowPlayingBloc;
+  final MovieListBloc upcomingBloc;
+  final MovieListBloc popularBloc;
+  final MovieListBloc topRatedBloc;
 
-  MovieListScreen({Key key, MovieListBloc bloc})
-      : _bloc = bloc,
-        super(key: key);
+  const MovieListScreen({
+    Key key,
+    this.nowPlayingBloc,
+    this.upcomingBloc,
+    this.popularBloc,
+    this.topRatedBloc,
+  }) : super(key: key);
 
   @override
-  _MovieListScreenState createState() => _MovieListScreenState(bloc: _bloc);
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 4,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("fluvie"),
+          bottom: TabBar(
+            isScrollable: true,
+            tabs: <Widget>[
+              Tab(key: Key('now_playing'), text: "Now Playing"),
+              Tab(key: Key('upcoming'), text: "Upcoming"),
+              Tab(key: Key('popular'), text: "Popular"),
+              Tab(key: Key('top_rated'), text: "Top Rated"),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: <Widget>[
+            _MovieList(
+              key: Key('now_playing'),
+              movieListBloc: nowPlayingBloc,
+              listType: MovieListEnum.nowPlaying,
+            ),
+            _MovieList(
+              key: Key('upcoming'),
+              movieListBloc: upcomingBloc,
+              listType: MovieListEnum.upcoming,
+            ),
+            _MovieList(
+              key: Key('popular'),
+              movieListBloc: popularBloc,
+              listType: MovieListEnum.popular,
+            ),
+            _MovieList(
+              key: Key('top_rated'),
+              movieListBloc: topRatedBloc,
+              listType: MovieListEnum.topRated,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
-class _MovieListScreenState extends State<MovieListScreen> {
-  MovieListBloc _bloc;
+class _MovieList extends StatefulWidget {
+  final MovieListBloc movieListBloc;
+  final MovieListEnum listType;
+
+  const _MovieList({Key key, this.movieListBloc, this.listType})
+      : super(key: key);
+
+  @override
+  _MovieListState createState() =>
+      _MovieListState(
+        movieListBloc: movieListBloc,
+        listType: listType,
+      );
+}
+
+class _MovieListState extends State<_MovieList> {
+  final MovieListBloc movieListBloc;
+  final MovieListEnum listType;
   final _scrollController = ScrollController();
   final _scrollThreshold = 200.0;
 
-  _MovieListScreenState({MovieListBloc bloc}) {
-    _bloc = bloc;
+  _MovieListState({this.movieListBloc, this.listType}) {
     _scrollController.addListener(_onScroll);
-    _bloc.dispatch(Fetch(type: MovieListEnum.nowPlaying));
+    print('fetch type: ${listType.toString()}');
+    movieListBloc.dispatch(Fetch(type: listType));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("fluvie"),
-      ),
-      body: BlocBuilder(
-        bloc: _bloc,
-        builder: (BuildContext context, MovieListState state) {
-          if (state is MovieListUninitialized) {
-            return Center(child: Text("Loading"));
+    return BlocBuilder(
+      bloc: movieListBloc,
+      builder: (BuildContext context, MovieListState state) {
+        if (state is MovieListUninitialized) {
+          return Center(child: Text("Loading"));
+        }
+
+        if (state is MovieListError) {
+          return Center(child: Text("Failed to fetch movies"));
+        }
+
+        if (state is MovieListLoaded) {
+          if (state.movies.isEmpty) {
+            return Center(child: Text("No movies"));
           }
 
-          if (state is MovieListError) {
-            return Center(child: Text("Failed to fetch movies"));
-          }
+          return ListView.builder(
+            itemBuilder: (context, index) {
+              if (index >= state.movies.length) {
+                return _BottomLoader();
+              }
 
-          if (state is MovieListLoaded) {
-            if (state.movies.isEmpty) {
-              return Center(child: Text("No movies"));
-            }
-
-            return ListView.builder(
-              itemBuilder: (context, index) {
-                if (index >= state.movies.length) {
-                  return _BottomLoader();
-                }
-
-                return _MovieItem(
-                  movie: state.movies[index],
-                  index: index,
-                );
-              },
-              itemCount: state.hasReachedMax
-                  ? state.movies.length
-                  : state.movies.length + 1,
-              controller: _scrollController,
-            );
-          }
-        },
-      ),
+              return _MovieItem(
+                movie: state.movies[index],
+                index: index,
+              );
+            },
+            itemCount: state.hasReachedMax
+                ? state.movies.length
+                : state.movies.length + 1,
+            controller: _scrollController,
+          );
+        }
+      },
     );
   }
 
@@ -77,7 +137,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.position.pixels;
     if (maxScroll - currentScroll <= _scrollThreshold) {
-      _bloc.dispatch(Fetch());
+      movieListBloc.dispatch(Fetch());
     }
   }
 }
