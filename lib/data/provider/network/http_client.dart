@@ -12,15 +12,17 @@ class HttpClient {
     @required this.apiKey,
   });
 
-  Future<Response> get(String path) {
-    return httpClient.get(_buildUri(path));
+  Future<Response> get(String path, {Map<String, dynamic> queryParams}) {
+    return httpClient.get(_buildUri(path, queryParams: queryParams));
   }
 
-  Uri _buildUri(String path) {
-    final uri = Uri.parse(baseUrl);
-    final queryParameters = {'api_key': apiKey};
+  Uri _buildUri(String path, {Map<String, dynamic> queryParams}) {
+    final Map<String, dynamic> queryParameters = {'api_key': apiKey};
+    queryParameters.addAll(queryParams);
 
-    uri.replace(path: path, queryParameters: queryParameters);
-    return uri;
+    final uri = Uri.parse(baseUrl);
+
+    return uri.replace(
+        path: "${uri.path}$path", queryParameters: queryParameters);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluvie/data/model/movie.dart';
 import 'package:fluvie/widget/poster_card.dart';
@@ -13,19 +14,18 @@ class MovieCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
+        PosterCard(url: _movie.posterUrl()),
         Expanded(
-          flex: 2,
-          child: PosterCard(url: _movie.posterUrl()),
-        ),
-        Expanded(
-          flex: 4,
+          flex: 3,
           child: Padding(
-            padding: EdgeInsets.only(top: 8.0, bottom: 8.0, left: 20.0),
+            padding: EdgeInsets.only(left: 20.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Expanded(
                       flex: 1,
@@ -43,7 +43,9 @@ class MovieCard extends StatelessWidget {
                     Expanded(
                       flex: 0,
                       child: Icon(
-                        Icons.favorite_border, color: Colors.redAccent,),
+                        Icons.favorite_border,
+                        color: Colors.redAccent,
+                      ),
                     ),
                   ],
                 ),
@@ -60,10 +62,10 @@ class MovieCard extends StatelessWidget {
                   child: Text(
                     _movie.overview,
                     style: Theme.of(context).textTheme.body1.copyWith(
-                          fontSize: 12.0,
-                          color: Colors.grey[600],
-                        ),
-                    maxLines: 6,
+                      fontSize: 12.0,
+                      color: Colors.grey[600],
+                    ),
+                    maxLines: 5,
                     overflow: TextOverflow.ellipsis,
                   ),
                 )

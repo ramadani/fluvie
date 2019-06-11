@@ -1,47 +1,109 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluvie/bloc/movie_list/movie_list.dart';
+import 'package:fluvie/bloc/movie_list/movie_list_bloc.dart';
 import 'package:fluvie/data/model/movie.dart';
-import 'package:fluvie/screen/movie_list/movie_card.dart';
+import 'package:fluvie/data/repository/movie_list_enum.dart';
 
-class MovieListScreen extends StatelessWidget {
-  const MovieListScreen({Key key}) : super(key: key);
+import 'movie_card.dart';
+
+class MovieListScreen extends StatefulWidget {
+  final MovieListBloc _bloc;
+
+  MovieListScreen({Key key, MovieListBloc bloc})
+      : _bloc = bloc,
+        super(key: key);
+
+  @override
+  _MovieListScreenState createState() => _MovieListScreenState(bloc: _bloc);
+}
+
+class _MovieListScreenState extends State<MovieListScreen> {
+  MovieListBloc _bloc;
+  final _scrollController = ScrollController();
+  final _scrollThreshold = 200.0;
+
+  _MovieListScreenState({MovieListBloc bloc}) {
+    _bloc = bloc;
+    _scrollController.addListener(_onScroll);
+    _bloc.dispatch(Fetch(type: MovieListEnum.nowPlaying));
+  }
 
   @override
   Widget build(BuildContext context) {
-    final movie = Movie(
-      "Dark Phoenix",
-      "Dark Phoenix",
-      "/kZv92eTc0Gg3mKxqjjDAM73z9cy.jpg",
-      "/phxiKFDvPeQj4AbkvJLmuZEieDU.jpg",
-      "The X-Men face their most formidable and powerful foe when one of their own, Jean Grey, starts to spiral out of control. During a rescue mission in outer space, Jean is nearly killed when she's hit by a mysterious cosmic force. Once she returns home, this force not only makes her infinitely more powerful, but far more unstable. The X-Men must now band together to save her soul and battle aliens that want to use Grey's new abilities to rule the galaxy.",
-      283.205,
-      1299,
-      7.2,
-    );
-
     return Scaffold(
       appBar: AppBar(
         title: Text("fluvie"),
       ),
-      body: ListView.builder(
-        itemCount: 20,
-        itemBuilder: (context, index) {
-          final vertical = 28.0;
-          final horizontal = 16.0;
-          return InkWell(
-            onTap: () {
-              print(movie.title);
-            },
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: index == 0 ? vertical : vertical / 2,
-                bottom: index == (20 - 1) ? vertical : vertical / 2,
-                left: horizontal,
-                right: horizontal,
-              ),
-              child: MovieCard(movie: movie),
-            ),
-          );
+      body: BlocBuilder(
+        bloc: _bloc,
+        builder: (BuildContext context, MovieListState state) {
+          if (state is MovieListUninitialized) {
+            return Center(child: Text("Loading"));
+          }
+
+          if (state is MovieListError) {
+            return Center(child: Text("Failed to fetch movies"));
+          }
+
+          if (state is MovieListLoaded) {
+            if (state.movies.isEmpty) {
+              return Center(child: Text("No movies"));
+            }
+
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                if (index >= state.movies.length) {
+                  return Text("loading");
+                }
+
+                return _MovieItem(
+                  movie: state.movies[index],
+                  index: index,
+                );
+              },
+              itemCount: state.hasReachedMax
+                  ? state.movies.length
+                  : state.movies.length + 1,
+              controller: _scrollController,
+            );
+          }
         },
+      ),
+    );
+  }
+
+  void _onScroll() {
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+    if (maxScroll - currentScroll <= _scrollThreshold) {
+      _bloc.dispatch(Fetch());
+    }
+  }
+}
+
+class _MovieItem extends StatelessWidget {
+  final Movie movie;
+  final int index;
+
+  const _MovieItem({Key key, this.movie, this.index}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final vertical = 28.0;
+    final horizontal = 16.0;
+    return InkWell(
+      onTap: () {
+        print(movie.title);
+      },
+      child: Padding(
+        padding: EdgeInsets.only(
+          top: index == 0 ? vertical : vertical / 2,
+          bottom: index == (20 - 1) ? vertical : vertical / 2,
+          left: horizontal,
+          right: horizontal,
+        ),
+        child: MovieCard(movie: movie),
       ),
     );
   }

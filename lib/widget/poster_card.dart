@@ -7,10 +7,13 @@ class PosterCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dividedBy = 1.8;
     return Container(
       child: ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(8.0)),
-        child: Image.network(url, fit: BoxFit.cover),
+        child: Image.network(url, fit: BoxFit.cover,
+          width: 200 / dividedBy,
+          height: 300 / dividedBy,),
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(

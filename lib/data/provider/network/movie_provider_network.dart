@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:fluvie/data/collection/movie_collection.dart';
 import 'package:fluvie/data/model/movie.dart';
 import 'package:fluvie/data/provider/movie_provider.dart';
@@ -12,7 +13,9 @@ class MovieProviderNetwork implements MovieProvider {
   @override
   Future<MovieCollection> getNowPlaying(int page) async {
     try {
-      final response = await httpClient.get("/movie/now_playing");
+      final queryParams = {'page': page.toString()};
+      final response =
+      await httpClient.get("/movie/now_playing", queryParams: queryParams);
       final data = json.decode(response.body);
 
       if (response.statusCode == 200) {
@@ -89,14 +92,15 @@ class MovieProviderNetwork implements MovieProvider {
     final collection = MovieCollection(page, total, pages);
     final List<Movie> movies = results.map((raw) {
       return Movie(
-        raw['title'],
-        raw['original_title'],
-        raw['poster_path'],
-        raw['backdrop_path'],
-        raw['overview'],
-        raw['popularity'],
-        raw['vote_count'],
-        raw['vote_average'],
+        id: raw['id'],
+        title: raw['title'],
+        originalTitle: raw['original_title'],
+        posterPath: raw['poster_path'],
+        backdropPath: raw['backdrop_path'],
+        overview: raw['overview'],
+        popularity: (raw['popularity'] as num).toDouble(),
+        voteCount: raw['vote_count'] as num,
+        voteAverage: (raw['vote_average'] as num).toDouble(),
       );
     }).toList();
 

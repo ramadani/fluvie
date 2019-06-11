@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluvie/bloc/movie_list_bloc.dart';
+import 'package:fluvie/bloc/movie_list/movie_list.dart';
 import 'package:fluvie/config/config.dart';
 import 'package:fluvie/config/json_config.dart';
 import 'package:fluvie/data/provider/movie_provider.dart';

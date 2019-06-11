@@ -6,13 +6,10 @@ abstract class MovieListEvent extends Equatable {
 }
 
 class Fetch extends MovieListEvent {
-  int currentPage = 0;
-  final MovieListEnum currentType;
+  final MovieListEnum type;
 
-  Fetch({this.currentType}) : super([currentType]);
+  Fetch({this.type}) : super([type]);
 
   @override
-  String toString() => 'Fetch';
-
-  int nextPage() => currentPage + 1;
+  String toString() => 'Fetch ${type.toString()}';
 }

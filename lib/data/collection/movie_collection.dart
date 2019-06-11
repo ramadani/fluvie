@@ -4,7 +4,7 @@ class MovieCollection {
   final int page;
   final int totalResults;
   final int totalPages;
-  List<Movie> results;
+  final List<Movie> results = List();
 
   MovieCollection(this.page, this.totalResults, this.totalPages);
 

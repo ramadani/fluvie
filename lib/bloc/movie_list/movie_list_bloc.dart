@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:fluvie/bloc/movie_list_bloc.dart';
+import 'package:fluvie/bloc/movie_list/movie_list.dart';
 import 'package:fluvie/data/repository/movie_repository.dart';
 
 class MovieListBloc extends Bloc<MovieListEvent, MovieListState> {
@@ -16,23 +16,31 @@ class MovieListBloc extends Bloc<MovieListEvent, MovieListState> {
       final state = currentState;
       try {
         if (state is MovieListUninitialized) {
-          final collection =
-              await _movieRepository.list(event.nextPage(), event.currentType);
+          final collection = await _movieRepository.list(1, event.type);
 
           yield MovieListLoaded(
             movies: collection.results,
+            currentPage: collection.page,
             hasReachedMax: collection.page >= collection.totalPages,
+            listType: event.type,
           );
         } else if (state is MovieListLoaded) {
           final collection =
-              await _movieRepository.list(event.nextPage(), event.currentType);
+          await _movieRepository.list(state.nextPage(), state.listType);
 
-          yield collection.results.isEmpty
-              ? state.copyWith(hasReachedMax: true)
-              : MovieListLoaded(
-                  movies: state.movies + collection.results,
-                  hasReachedMax: collection.page >= collection.totalPages,
-                );
+          if (collection.results.isEmpty) {
+            yield state.copyWith(
+              currentPage: collection.page,
+              hasReachedMax: true,
+            );
+          } else {
+            yield MovieListLoaded(
+              movies: state.movies + collection.results,
+              currentPage: collection.page,
+              hasReachedMax: collection.page >= collection.totalPages,
+              listType: state.listType,
+            );
+          }
         }
       } catch (_) {
         yield MovieListError();
