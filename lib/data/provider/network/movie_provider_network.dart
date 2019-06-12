@@ -12,76 +12,58 @@ class MovieProviderNetwork implements MovieProvider {
 
   @override
   Future<MovieCollection> getNowPlaying(int page) async {
-    try {
-      final queryParams = {'page': page.toString()};
-      final response =
-      await httpClient.get("/movie/now_playing", queryParams: queryParams);
-      final data = json.decode(response.body);
+    final queryParams = {'page': page.toString()};
+    final response =
+    await httpClient.get("/movie/now_playing", queryParams: queryParams,);
+    final data = json.decode(response.body);
 
-      if (response.statusCode == 200) {
-        return _parseCollection(data);
-      } else {
-        throw Exception(data['status_message']);
-      }
-    } catch (e) {
-      print(e.toString());
+    if (response.statusCode == 200) {
+      return _parseCollection(data);
+    } else {
+      throw Exception(data['status_message']);
     }
-
-    return null;
   }
 
   @override
   Future<MovieCollection> getPopular(int page) async {
-    try {
-      final response = await httpClient.get("/movie/popular");
-      final data = json.decode(response.body);
+    final queryParams = {'page': page.toString()};
+    final response =
+    await httpClient.get("/movie/popular", queryParams: queryParams);
+    final data = json.decode(response.body);
 
-      if (response.statusCode == 200) {
-        return _parseCollection(data);
-      } else {
-        throw Exception(data['status_message']);
-      }
-    } catch (e) {
-      print(e.toString());
+    if (response.statusCode == 200) {
+      return _parseCollection(data);
+    } else {
+      throw Exception(data['status_message']);
     }
-
-    return null;
   }
 
   @override
   Future<MovieCollection> getTopRated(int page) async {
-    try {
-      final response = await httpClient.get("/movie/top_rated");
-      final data = json.decode(response.body);
+    final queryParams = {'page': page.toString()};
+    final response =
+    await httpClient.get("/movie/top_rated", queryParams: queryParams);
+    final data = json.decode(response.body);
 
-      if (response.statusCode == 200) {
-        return _parseCollection(data);
-      } else {
-        throw Exception(data['status_message']);
-      }
-    } catch (e) {
-      print(e.toString());
+    if (response.statusCode == 200) {
+      return _parseCollection(data);
+    } else {
+      throw Exception(data['status_message']);
     }
-
-    return null;
   }
 
   @override
   Future<MovieCollection> getUpcoming(int page) async {
-    try {
-      final response = await httpClient.get("/movie/upcoming");
-      final data = json.decode(response.body);
+    final queryParams = {'page': page.toString()};
+    final response =
+    await httpClient.get("/movie/upcoming", queryParams: queryParams);
+    final data = json.decode(response.body);
 
-      if (response.statusCode == 200) {
-        return _parseCollection(data);
-      } else {
-        throw Exception(data['status_message']);
-      }
-    } catch (e) {
-      print(e.toString());
+    if (response.statusCode == 200) {
+      return _parseCollection(data);
+    } else {
+      throw Exception(data['status_message']);
     }
-
-    return null;
   }
 
   MovieCollection _parseCollection(dynamic data) {
