@@ -43,7 +43,7 @@ class MovieListBloc extends Bloc<MovieListEvent, MovieListState> {
           }
         }
       } catch (e) {
-        print('error gan: ${e.toString()}');
+        print('error: ${e.toString()}');
         yield MovieListError();
       }
     }

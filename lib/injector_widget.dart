@@ -34,7 +34,7 @@ class InjectorWidget extends InheritedWidget {
 
   Future<void> init() async {
     _config = JsonConfig();
-    await _config.loadFromEnv(_envFilename);
+    await _config.loadFromAssets(_envFilename);
     final tmdbConfig = _config.data().tmdb;
 
     _httpClient = HttpClient(

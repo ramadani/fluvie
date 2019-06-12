@@ -7,7 +7,7 @@ import 'app.dart';
 void main() async {
   final app = InjectorWidget(
     child: App(),
-    envFilename: "development.json",
+    envFilename: "env.json",
   );
   await app.init();
 
