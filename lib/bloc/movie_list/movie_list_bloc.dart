@@ -16,7 +16,7 @@ class MovieListBloc extends Bloc<MovieListEvent, MovieListState> {
       final state = currentState;
       try {
         if (state is MovieListUninitialized) {
-          final collection = await _movieRepository.list(1, event.type);
+          final collection = await _movieRepository.fetch(1, event.type);
 
           yield MovieListLoaded(
             movies: collection.results,
@@ -26,7 +26,7 @@ class MovieListBloc extends Bloc<MovieListEvent, MovieListState> {
           );
         } else if (state is MovieListLoaded) {
           final collection =
-          await _movieRepository.list(state.nextPage(), state.listType);
+          await _movieRepository.fetch(state.nextPage(), state.listType);
 
           if (collection.results.isEmpty) {
             yield state.copyWith(

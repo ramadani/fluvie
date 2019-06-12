@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:fluvie/bloc/movie_list/movie_list.dart';
 import 'package:fluvie/config/config.dart';
 import 'package:fluvie/config/json_config.dart';
+import 'package:fluvie/data/provider/db/movie_provider_db.dart';
+import 'package:fluvie/data/provider/db/sqlite_provider.dart';
+import 'package:fluvie/data/provider/movie_cache_provider.dart';
 import 'package:fluvie/data/provider/movie_provider.dart';
 import 'package:fluvie/data/provider/network/http_client.dart';
 import 'package:fluvie/data/provider/network/movie_provider_network.dart';
@@ -14,8 +17,8 @@ class InjectorWidget extends InheritedWidget {
   final String _envFilename;
 
   Config _config;
-  HttpClient _httpClient;
   MovieProvider _movieProvider;
+  MovieCacheProvider _movieCacheProvider;
   MovieRepository _movieRepository;
   MovieListBloc _movieListBloc;
 
@@ -35,15 +38,19 @@ class InjectorWidget extends InheritedWidget {
   Future<void> init() async {
     _config = JsonConfig();
     await _config.loadFromAssets(_envFilename);
-    final tmdbConfig = _config.data().tmdb;
 
-    _httpClient = HttpClient(
+    final db = await SQLiteProvider().open();
+    final tmdbConfig = _config.data().tmdb;
+    final httpClient = HttpClient(
       httpClient: Client(),
       baseUrl: tmdbConfig.baseUrl,
       apiKey: tmdbConfig.apiKey,
     );
-    _movieProvider = MovieProviderNetwork(_httpClient);
-    _movieRepository = MovieRepositoryConcrete(_movieProvider);
+
+    _movieProvider = MovieProviderNetwork(httpClient);
+    _movieCacheProvider = MovieProviderDb(db);
+    _movieRepository =
+        MovieRepositoryConcrete(_movieProvider, _movieCacheProvider);
   }
 
   MovieListBloc movieListBloc({bool forceCreate = false}) {

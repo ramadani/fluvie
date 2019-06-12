@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluvie/bloc/movie_list/movie_list.dart';
 import 'package:fluvie/data/model/movie.dart';
 import 'package:fluvie/data/repository/movie_list_enum.dart';
+import 'package:fluvie/widget/circle_loader.dart';
 
 import 'movie_card.dart';
 
@@ -43,7 +44,7 @@ class _MovieListState extends State<MovieList>
       bloc: movieListBloc,
       builder: (BuildContext context, MovieListState state) {
         if (state is MovieListUninitialized) {
-          return Center(child: Text("Loading"));
+          return CircleLoader();
         }
 
         if (state is MovieListError) {
@@ -58,7 +59,10 @@ class _MovieListState extends State<MovieList>
           return ListView.builder(
             itemBuilder: (context, index) {
               if (index >= state.movies.length) {
-                return _BottomLoader();
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  child: CircleLoader(),
+                );
               }
 
               return _MovieItem(
@@ -107,24 +111,6 @@ class _MovieItem extends StatelessWidget {
           right: horizontal,
         ),
         child: MovieCard(movie: movie),
-      ),
-    );
-  }
-}
-
-class _BottomLoader extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: Center(
-        child: SizedBox(
-          width: 24,
-          height: 24,
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-          ),
-        ),
       ),
     );
   }

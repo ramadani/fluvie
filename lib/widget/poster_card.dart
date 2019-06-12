@@ -11,9 +11,12 @@ class PosterCard extends StatelessWidget {
     return Container(
       child: ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(8.0)),
-        child: Image.network(url, fit: BoxFit.cover,
+        child: Image.network(
+          url,
+          fit: BoxFit.contain,
           width: 200 / dividedBy,
-          height: 300 / dividedBy,),
+          height: 300 / dividedBy,
+        ),
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(

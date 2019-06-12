@@ -74,7 +74,7 @@ class MovieProviderNetwork implements MovieProvider {
     final collection = MovieCollection(page, total, pages);
     final List<Movie> movies = results.map((raw) {
       return Movie(
-        id: raw['id'],
+        id: raw['id'] as num,
         title: raw['title'],
         originalTitle: raw['original_title'],
         posterPath: raw['poster_path'],
