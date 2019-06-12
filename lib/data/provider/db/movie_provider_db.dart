@@ -7,7 +7,7 @@ class MovieProviderDb implements MovieCacheProvider {
 
   MovieProviderDb(this.db);
 
-  Future<List<Movie>> fetch(String listType) async {
+  Future<List<Movie>> fetchByListType(String listType) async {
     List<Movie> results;
 
     final movies = await db.rawQuery('SELECT movie_id, title, '

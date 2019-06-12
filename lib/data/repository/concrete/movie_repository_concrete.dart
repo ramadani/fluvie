@@ -34,7 +34,7 @@ class MovieRepositoryConcrete implements MovieRepository {
 
   @override
   Future<List<Movie>> fetchFromCache(MovieListEnum type) async {
-    return await _movieCacheProvider.fetch(type.toString());
+    return await _movieCacheProvider.fetchByListType(type.toString());
   }
 
   @override
