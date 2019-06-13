@@ -8,12 +8,14 @@ class MovieProviderDb implements MovieCacheProvider {
   MovieProviderDb(this.db);
 
   Future<List<Movie>> fetchByListType(String listType) async {
-    List<Movie> results;
+    final List<Movie> results = List();
 
-    final movies = await db.rawQuery('SELECT movie_id, title, '
+    final movies = await db.rawQuery(
+        'SELECT movie_id, title, '
         'original_title, poster_path, backdrop_path, overview, popularity, '
-        'vote_count, vote_average, release_date, list_type FROM movies'
-        'WHERE list_type = $listType');
+            'vote_count, vote_average, release_date, list_type FROM movies '
+            'WHERE list_type = ?',
+        [listType]);
 
     if (movies.isNotEmpty) {
       movies.toList().forEach((raw) {
@@ -43,17 +45,28 @@ class MovieProviderDb implements MovieCacheProvider {
 
   @override
   Future<bool> deleteAllByListType(String listType) async {
-    await db.delete('DELETE FROM movies WHERE list_type = $listType');
+    await db.rawDelete('DELETE FROM movies WHERE list_type = ?', [listType]);
     return null;
   }
 
   Future<int> _insert(Movie movie, String listType) async {
-    return await db.rawInsert('INSERT INTO movies (movie_id, title, '
+    return await db.rawInsert(
+        'INSERT INTO movies (movie_id, title, '
         'original_title, poster_path, backdrop_path, overview, popularity, '
         'vote_count, vote_average, release_date, list_type)'
-        'VALUES (${movie.id}, ${movie.title}, ${movie.originalTitle}, '
-        '${movie.posterPath}, ${movie.backdropPath}, ${movie.overview},'
-        '${movie.popularity}, ${movie.voteCount}, ${movie.voteAverage},'
-        '${movie.releaseDate}, $listType})');
+            'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [
+          movie.id,
+          movie.title,
+          movie.originalTitle,
+          movie.posterPath,
+          movie.backdropPath,
+          movie.overview,
+          movie.popularity,
+          movie.voteCount,
+          movie.voteAverage,
+          movie.releaseDate,
+          listType,
+        ]);
   }
 }
