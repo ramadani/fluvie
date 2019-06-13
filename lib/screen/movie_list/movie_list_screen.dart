@@ -40,6 +40,12 @@ class _MovieListScreenState extends State<MovieListScreen>
   }
 
   @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: tabs.length,

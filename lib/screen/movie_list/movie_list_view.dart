@@ -35,6 +35,12 @@ class _MovieListState extends State<MovieList>
   }
 
   @override
+  void dispose() {
+    movieListBloc.dispose();
+    super.dispose();
+  }
+
+  @override
   bool get wantKeepAlive => true;
 
   @override
