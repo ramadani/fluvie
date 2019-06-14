@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluvie/bloc/movie_list/movie_list.dart';
 import 'package:fluvie/data/model/movie.dart';
 import 'package:fluvie/data/repository/movie_list_enum.dart';
+import 'package:fluvie/screen/movie_detail/movie_detail_screen.dart';
 import 'package:fluvie/widget/circle_loader.dart';
 
 import 'movie_card.dart';
@@ -107,7 +108,8 @@ class _MovieItem extends StatelessWidget {
     final horizontal = 16.0;
     return InkWell(
       onTap: () {
-        print(movie.title);
+        Navigator.pushNamed(context, MovieDetailScreen.routeName,
+            arguments: MovieDetailScreenArgs(movie));
       },
       child: Padding(
         padding: EdgeInsets.only(

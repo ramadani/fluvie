@@ -16,7 +16,7 @@ class MovieCard extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        PosterCard(url: _movie.posterUrl()),
+        PosterCard(url: _movie.posterUrl(), width: 200, height: 300),
         Expanded(
           flex: 3,
           child: Padding(

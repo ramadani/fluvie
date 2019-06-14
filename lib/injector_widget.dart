@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluvie/bloc/movie_detail/movie_detail_bloc.dart';
 import 'package:fluvie/bloc/movie_list/movie_list.dart';
 import 'package:fluvie/config/config.dart';
 import 'package:fluvie/config/json_config.dart';
@@ -21,6 +22,7 @@ class InjectorWidget extends InheritedWidget {
   MovieCacheProvider _movieCacheProvider;
   MovieRepository _movieRepository;
   MovieListBloc _movieListBloc;
+  MovieDetailBloc _movieDetailBloc;
 
   InjectorWidget({Key key, @required Widget child, String envFilename})
       : assert(child != null),
@@ -59,5 +61,13 @@ class InjectorWidget extends InheritedWidget {
     }
 
     return _movieListBloc;
+  }
+
+  MovieDetailBloc movieDetailBloc({bool forceCreate = false}) {
+    if (_movieDetailBloc == null || forceCreate) {
+      _movieDetailBloc = MovieDetailBloc(_movieRepository);
+    }
+
+    return _movieDetailBloc;
   }
 }

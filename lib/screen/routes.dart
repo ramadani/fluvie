@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluvie/injector_widget.dart';
+import 'package:fluvie/screen/movie_detail/movie_detail_screen.dart';
 
 import 'movie_list/movie_list_screen.dart';
-
-const String rootRoute = '/';
 
 Map<String, WidgetBuilder> routes(BuildContext context) {
   final nowPlayingBloc =
@@ -21,8 +20,10 @@ Map<String, WidgetBuilder> routes(BuildContext context) {
     popularBloc: popularBloc,
     topRatedBloc: topRatedBloc,
   );
+  final movieDetailScreen = MovieDetailScreen();
 
   return {
-    rootRoute: (_) => movieListScreen,
+    MovieListScreen.routeName: (_) => movieListScreen,
+    MovieDetailScreen.routeName: (_) => movieDetailScreen,
   };
 }

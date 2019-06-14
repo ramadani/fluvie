@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluvie/screen/movie_list/movie_list_screen.dart';
 import 'package:fluvie/screen/routes.dart';
 
 import 'screen/colors.dart';
@@ -12,7 +13,7 @@ class App extends StatelessWidget {
         primaryColor: primaryColor,
         accentColor: secondaryColor,
       ),
-      initialRoute: rootRoute,
+      initialRoute: MovieListScreen.routeName,
       routes: routes(context),
     );
   }

@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 
 class PosterCard extends StatelessWidget {
   final String url;
+  final double width;
+  final double height;
 
-  const PosterCard({Key key, this.url}) : super(key: key);
+  const PosterCard({Key key, this.url, this.width, this.height})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +17,8 @@ class PosterCard extends StatelessWidget {
         child: Image.network(
           url,
           fit: BoxFit.contain,
-          width: 200 / dividedBy,
-          height: 300 / dividedBy,
+          width: width / dividedBy,
+          height: height / dividedBy,
         ),
       ),
       decoration: BoxDecoration(

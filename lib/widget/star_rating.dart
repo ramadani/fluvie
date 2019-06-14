@@ -4,9 +4,15 @@ class StarRating extends StatelessWidget {
   final Color color;
   final int starCount;
   final double rating;
+  final double starSize;
 
-  const StarRating({Key key, this.color, this.starCount, this.rating})
-      : super(key: key);
+  const StarRating({
+    Key key,
+    this.color,
+    this.starCount,
+    this.rating,
+    this.starSize = 16.0,
+  }) : super(key: key);
 
   Widget _buildStar(int index) {
     Icon icon;
@@ -26,7 +32,7 @@ class StarRating extends StatelessWidget {
       padding: EdgeInsets.only(
         left: index == 0 ? 0.0 : 2.0,
       ),
-      child: Icon(icon.icon, color: icon.color, size: 16.0),
+      child: Icon(icon.icon, color: icon.color, size: starSize),
     );
   }
 

@@ -18,3 +18,12 @@ class MovieDetailLoaded extends MovieDetailState {
   @override
   String toString() => 'MovieDetailLoaded';
 }
+
+class MovieDetailError extends MovieDetailState {
+  final String message;
+
+  MovieDetailError(this.message);
+
+  @override
+  String toString() => 'MovieDetailError';
+}

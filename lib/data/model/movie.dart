@@ -32,4 +32,8 @@ class Movie extends Equatable {
   String posterUrl() {
     return "https://image.tmdb.org/t/p/w200$posterPath";
   }
+
+  String backdropUrl() {
+    return "https://image.tmdb.org/t/p/w500$backdropPath";
+  }
 }

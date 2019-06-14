@@ -13,9 +13,13 @@ class MovieDetailBloc extends Bloc<MovieDetailEvent, MovieDetailState> {
 
   @override
   Stream<MovieDetailState> mapEventToState(MovieDetailEvent event) async* {
-    if (event is GetMovieDetail) {
-      final movie = await _movieRepository.findFromCache(event.movieId);
-      yield MovieDetailLoaded(movie);
+    try {
+      if (event is GetMovieDetail) {
+        final movie = await _movieRepository.findFromCache(event.movieId);
+        yield MovieDetailLoaded(movie);
+      }
+    } catch (e) {
+      yield MovieDetailError(e.toString());
     }
   }
 }

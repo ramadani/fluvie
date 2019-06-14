@@ -5,6 +5,8 @@ import 'package:fluvie/data/repository/movie_list_enum.dart';
 import 'movie_list_view.dart';
 
 class MovieListScreen extends StatefulWidget {
+  static const routeName = '/';
+
   final MovieListBloc nowPlayingBloc;
   final MovieListBloc upcomingBloc;
   final MovieListBloc popularBloc;
