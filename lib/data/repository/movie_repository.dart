@@ -8,4 +8,6 @@ abstract class MovieRepository {
   Future<List<Movie>> fetchFromCache(MovieListEnum type);
 
   Future<bool> syncToCache(List<Movie> movies, MovieListEnum type);
+
+  Future<Movie> findFromCache(int id);
 }

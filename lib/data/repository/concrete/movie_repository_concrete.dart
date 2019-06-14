@@ -44,4 +44,9 @@ class MovieRepositoryConcrete implements MovieRepository {
 
     return true;
   }
+
+  @override
+  Future<Movie> findFromCache(int id) async {
+    return await _movieCacheProvider.findByMovieId(id);
+  }
 }

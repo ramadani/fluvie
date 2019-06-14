@@ -10,11 +10,20 @@ class Movie extends Equatable {
   final double popularity;
   final int voteCount;
   final double voteAverage;
-  String releaseDate;
+  final String releaseDate;
 
-  Movie(
-      {this.id, this.title, this.originalTitle, this.posterPath, this.backdropPath,
-        this.overview, this.popularity, this.voteCount, this.voteAverage});
+  Movie({
+    this.id,
+    this.title,
+    this.originalTitle,
+    this.posterPath,
+    this.backdropPath,
+    this.overview,
+    this.popularity,
+    this.voteCount,
+    this.voteAverage,
+    this.releaseDate,
+  });
 
   DateTime getReleaseDate() {
     return DateTime.parse(releaseDate);

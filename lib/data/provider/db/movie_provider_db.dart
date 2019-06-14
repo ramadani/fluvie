@@ -19,22 +19,26 @@ class MovieProviderDb implements MovieCacheProvider {
 
     if (movies.isNotEmpty) {
       movies.toList().forEach((raw) {
-        final movie = Movie(
-          id: raw['movie_id'] as num,
-          title: raw['title'],
-          originalTitle: raw['original_title'],
-          posterPath: raw['poster_path'],
-          backdropPath: raw['backdrop_path'],
-          overview: raw['overview'],
-          popularity: (raw['popularity'] as num).toDouble(),
-          voteCount: raw['vote_count'] as num,
-          voteAverage: (raw['vote_average'] as num).toDouble(),
-        );
-        results.add(movie);
+        results.add(_getMovieFromRaw(raw));
       });
     }
 
     return results;
+  }
+
+  @override
+  Future<Movie> findByMovieId(int movieId) async {
+    final movies = await db.rawQuery(
+        'SELECT movie_id, title, original_title, poster_path, '
+            'backdrop_path, overview, popularity, vote_count, vote_average, '
+            'release_date FROM movies WHERE movie_id = ?',
+        [movieId]);
+
+    if (movies.isEmpty) {
+      throw Exception('Movie by id $movieId is not found');
+    }
+
+    return _getMovieFromRaw(movies[0]);
   }
 
   @override
@@ -68,5 +72,20 @@ class MovieProviderDb implements MovieCacheProvider {
           movie.releaseDate,
           listType,
         ]);
+  }
+
+  Movie _getMovieFromRaw(Map<String, dynamic> raw) {
+    return Movie(
+      id: raw['movie_id'] as num,
+      title: raw['title'],
+      originalTitle: raw['original_title'],
+      posterPath: raw['poster_path'],
+      backdropPath: raw['backdrop_path'],
+      overview: raw['overview'],
+      popularity: (raw['popularity'] as num).toDouble(),
+      voteCount: raw['vote_count'] as num,
+      voteAverage: (raw['vote_average'] as num).toDouble(),
+      releaseDate: raw['release_date'],
+    );
   }
 }
